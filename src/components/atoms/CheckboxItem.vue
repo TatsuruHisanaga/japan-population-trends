@@ -1,11 +1,11 @@
 <!-- components/atoms/CheckboxItem.vue -->
 <template>
   <label>
-    <input
-      type="checkbox"
-      :value="value"
-      :checked="checked"
-      @change="$emit('change', $event.target.checked)"
+    <input 
+      type="checkbox" 
+      :value="value" 
+      :checked="checked" 
+      @change="onChange($event)" 
     />
     <slot></slot>
   </label>
@@ -23,6 +23,15 @@ export default defineComponent({
     checked: {
       type: Boolean,
       default: false
+    }
+  },
+  emits: ['change'],
+  methods: {
+    onChange(event: Event) {
+      const target = event.target as HTMLInputElement
+      if (target) {
+        this.$emit('change', target.checked)
+      }
     }
   }
 })
