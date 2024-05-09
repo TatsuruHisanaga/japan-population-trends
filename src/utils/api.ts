@@ -9,3 +9,13 @@ export const fetchPrefectures = async () => {
   })
   return response.data.result
 }
+
+export const fetchPopulationComposition = async (prefCode: number) => {
+  const response = await axios.get(
+    `${API_URL}/api/v1/population/composition/perYear?prefCode=${prefCode}`,
+    {
+      headers: { 'X-API-KEY': API_KEY },
+    }
+  )
+  return response.data.result
+}
