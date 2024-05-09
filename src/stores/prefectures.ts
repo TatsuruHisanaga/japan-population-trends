@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { Prefecture } from '@/types/prefecture'
+import type { Prefecture } from '@/types/prefecture'
 import { fetchPrefectures } from '@/utils/api'
 
 export const usePrefecturesStore = defineStore({
