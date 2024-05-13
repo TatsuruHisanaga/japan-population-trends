@@ -13,7 +13,7 @@
     <PopulationCompositionGraph
       v-for="prefCode in selectedPrefectures"
       :key="prefCode"
-      :population-composition="populationCompositionState[prefCode]"
+      :population-composition="populationCompositionState[prefCode] || []"
     />
   </div>
 </template>

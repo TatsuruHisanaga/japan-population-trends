@@ -4,5 +4,5 @@ export interface PopulationComposition {
 }
 
 export interface PopulationCompositionData {
-  [key: number]: PopulationComposition[]
+  [key: number]: PopulationComposition[];
 }
