@@ -4,6 +4,10 @@
     <PrefectureCheckboxList
       :prefectures="prefecturesStore.prefectures"
       @change="onPrefectureChange"
+    <PopulationCompositionGraph
+      v-for="prefCode in selectedPrefectures"
+      :key="prefCode"
+      :population-composition="populationCompositionState[prefCode] || []"
     />
   </div>
 </template>
@@ -12,23 +16,35 @@
 import { defineComponent, onMounted } from 'vue'
 import PrefectureCheckboxList from '@/components/molecules/PrefectureCheckboxList.vue'
 import { prefecturesState, fetchPrefecturesData } from '@/utils/prefectures'
+import PopulationCompositionGraph from '../molecules/PopulationCompositionGraph.vue'
+import {
+  populationCompositionState,
+  fetchPopulationCompositionData
+} from '@/utils/populationComposition'
 
 export default defineComponent({
   components: {
-    PrefectureCheckboxList
+    PrefectureCheckboxList,
+    PopulationCompositionGraph
   },
   setup() {
+    const selectedPrefectures = ref<number[]>([])
+
     onMounted(async () => {
       await fetchPrefecturesData()
     })
 
-    const onPrefectureChange = async (selectedPrefectures: number[]) => {
-      console.log('Selected Prefectures:', selectedPrefectures)
-      // TODO: 選択された都道府県の人口構成を取得する処理を追加
+    const onPrefectureChange = async (selectedPrefCodes: number[]) => {
+      selectedPrefectures.value = selectedPrefCodes
+      await Promise.all(
+        selectedPrefCodes.map((prefCode) => fetchPopulationCompositionData(prefCode))
+      )
     }
 
     return {
       prefecturesState,
+      selectedPrefectures,
+      populationCompositionState,
       onPrefectureChange
     }
   }

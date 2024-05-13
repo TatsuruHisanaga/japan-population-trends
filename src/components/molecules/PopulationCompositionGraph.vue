@@ -12,10 +12,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import type { PropType } from 'vue'
-import type { PopulationComposition } from '@/types/populationComposition'
+import { defineComponent, type PropType, computed } from 'vue'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
+import type { PopulationComposition } from '@/types/populationComposition'
 
 export default defineComponent({
   name: 'PopulationCompositionGraph',
@@ -34,14 +33,20 @@ export default defineComponent({
     populationComposition: {
       type: Array as PropType<PopulationComposition[]>,
       required: true
+    },
+    selectedData: {
+      type: String,
+      required: true
     }
   },
-  computed: {
-    populationCompositionData(): { year: number; value: number }[] {
-      return this.populationComposition.map((data) => ({
-        year: data.year,
-        value: data.value
-      }))
+  setup(props) {
+    const populationCompositionData = computed(() => {
+      const data = props.populationComposition.find((item) => item.label === props.selectedData)
+      return data ? data.data : []
+    })
+
+    return {
+      populationCompositionData
     }
   }
 })
