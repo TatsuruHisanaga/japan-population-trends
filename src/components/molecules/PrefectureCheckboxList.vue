@@ -10,17 +10,25 @@
         {{ prefecture.prefName }}
       </CheckboxItem>
     </div>
+    <PopulationCompositionGraph
+      v-for="prefCode in selectedPrefectures"
+      :key="prefCode"
+      :population-composition="populationCompositionState[prefCode]"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import  { defineComponent, type PropType, ref } from 'vue'
 import type { Prefecture } from '@/types/prefecture'
+import { populationCompositionState, fetchPopulationCompositionData } from '@/utils/populationComposition'
 import CheckboxItem from '@/components/atoms/CheckboxItem.vue'
+import PopulationCompositionGraph from '@/components/molecules/PopulationCompositionGraph.vue'
 
 export default defineComponent({
   components: {
-    CheckboxItem
+    CheckboxItem,
+    PopulationCompositionGraph
   },
   props: {
     prefectures: {
@@ -28,22 +36,27 @@ export default defineComponent({
       required: true
     }
   },
-  data() {
-    return {
-      selectedPrefectures: [] as number[]
+  setup() {
+    const selectedPrefectures = ref<number[]>([])
+
+    const isChecked = (prefCode: number) => {
+      return selectedPrefectures.value.includes(prefCode)
     }
-  },
-  methods: {
-    isChecked(prefCode: number) {
-      return this.selectedPrefectures.includes(prefCode)
-    },
-    onCheckboxChange(prefCode: number, checked: boolean) {
+
+    const onCheckboxChange = async (prefCode: number, checked: boolean) => {
       if (checked) {
-        this.selectedPrefectures.push(prefCode)
+        selectedPrefectures.value.push(prefCode)
+        await fetchPopulationCompositionData(prefCode)
       } else {
-        this.selectedPrefectures = this.selectedPrefectures.filter((code) => code !== prefCode)
+        selectedPrefectures.value = selectedPrefectures.value.filter((code) => code !== prefCode)
       }
-      this.$emit('change', this.selectedPrefectures)
+    }
+
+    return {
+      populationCompositionState,
+      selectedPrefectures,
+      isChecked,
+      onCheckboxChange
     }
   }
 })
