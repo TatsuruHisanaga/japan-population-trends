@@ -10,7 +10,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { usePrefecturesStore } from '@/stores/prefectures'
 import PrefectureCheckboxList from '@/components/molecules/PrefectureCheckboxList.vue'
 
 export default defineComponent({
@@ -27,7 +26,7 @@ export default defineComponent({
       // TODO: 選択された都道府県の人口構成を取得する処理を追加
     }
     return {
-      prefecturesStore,
+      prefecturesState,
       onPrefectureChange
     }
   }
