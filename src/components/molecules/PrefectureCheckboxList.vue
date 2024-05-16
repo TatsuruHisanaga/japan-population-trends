@@ -1,6 +1,7 @@
 <!-- components/molecules/PrefectureCheckboxList.vue -->
 <template>
   <div>
+    <PopulationCompositionSelector @data-select="onDataSelect" />
     <div v-for="prefecture in prefectures" :key="prefecture.prefCode">
       <CheckboxItem
         :value="prefecture.prefCode"
@@ -14,21 +15,27 @@
       v-for="prefCode in selectedPrefectures"
       :key="prefCode"
       :population-composition="populationCompositionState[prefCode] || []"
+      :selected-data="selectedData"
     />
   </div>
 </template>
 
 <script lang="ts">
-import  { defineComponent, type PropType, ref } from 'vue'
+import { defineComponent, ref, type PropType } from 'vue'
 import type { Prefecture } from '@/types/prefecture'
-import { populationCompositionState, fetchPopulationCompositionData } from '@/utils/populationComposition'
-import CheckboxItem from '@/components/atoms/CheckboxItem.vue'
+import {
+  populationCompositionState,
+  fetchPopulationCompositionData
+} from '@/utils/populationComposition'
+import PopulationCompositionSelector from '@/components/molecules/PopulationCompositionSelector.vue'
 import PopulationCompositionGraph from '@/components/molecules/PopulationCompositionGraph.vue'
+import CheckboxItem from '@/components/atoms/CheckboxItem.vue'
 
 export default defineComponent({
   components: {
-    CheckboxItem,
-    PopulationCompositionGraph
+    PopulationCompositionSelector,
+    PopulationCompositionGraph,
+    CheckboxItem
   },
   props: {
     prefectures: {
@@ -36,8 +43,9 @@ export default defineComponent({
       required: true
     }
   },
-  setup() {
+  setup(props) {
     const selectedPrefectures = ref<number[]>([])
+    const selectedData = ref('総人口')
 
     const isChecked = (prefCode: number) => {
       return selectedPrefectures.value.includes(prefCode)
@@ -52,11 +60,17 @@ export default defineComponent({
       }
     }
 
+    const onDataSelect = (data: string) => {
+      selectedData.value = data
+    }
+
     return {
-      populationCompositionState,
       selectedPrefectures,
+      selectedData,
+      populationCompositionState,
       isChecked,
-      onCheckboxChange
+      onCheckboxChange,
+      onDataSelect
     }
   }
 })

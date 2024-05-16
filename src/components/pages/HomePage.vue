@@ -1,9 +1,7 @@
 <template>
   <div>
-    <h1>都道府県一覧</h1>
-    <PrefectureCheckboxList
-      :prefectures="prefecturesStore.prefectures"
-      @change="onPrefectureChange"
+    <h3>都道府県一覧</h3>
+    <PrefectureCheckboxList :prefectures="prefecturesState" @change="onPrefectureChange" />
     <PopulationCompositionGraph
       v-for="prefCode in selectedPrefectures"
       :key="prefCode"
@@ -13,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import PrefectureCheckboxList from '@/components/molecules/PrefectureCheckboxList.vue'
 import { prefecturesState, fetchPrefecturesData } from '@/utils/prefectures'
 import PopulationCompositionGraph from '../molecules/PopulationCompositionGraph.vue'
