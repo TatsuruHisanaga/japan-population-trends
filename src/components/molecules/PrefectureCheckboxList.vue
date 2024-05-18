@@ -85,7 +85,5 @@ export default defineComponent({
   grid-gap: 1px;
 }
 
-.checkbox-wrapper {
-  padding: 8px;
-}
+
 </style>

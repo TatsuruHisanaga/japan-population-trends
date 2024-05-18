@@ -1,13 +1,13 @@
 <!-- components/atoms/CheckboxItem.vue -->
 <template>
-  <label>
+  <label class="checkbox-item">
     <input 
       type="checkbox" 
       :value="value" 
       :checked="checked" 
       @change="onChange($event)" 
     />
-    <slot></slot>
+    <span><slot></slot></span>
   </label>
 </template>
 
@@ -36,3 +36,22 @@ export default defineComponent({
   }
 })
 </script>
+
+<style scoped>
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background-color 0.3s;
+}
+
+.checkbox-item input {
+  margin-right: 8px;
+}
+
+.checkbox-item:hover {
+  background-color: var(--theme-color-surface1);
+}
+</style>
