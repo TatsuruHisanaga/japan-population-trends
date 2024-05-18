@@ -1,13 +1,20 @@
 <template>
   <div>
-    <LineChart :width="600" :height="400" :data="populationCompositionData">
+    <LineChart v-if="chartData.length > 0" :width="600" :height="400" :data="chartData">
       <XAxis dataKey="year" />
       <YAxis />
       <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
       <Tooltip />
       <Legend />
-      <Line type="monotone" dataKey="value" stroke="#8884d8" />
+      <Line
+        v-for="(pref, index) in populationComposition"
+        :key="index"
+        type="monotone"
+        :dataKey="pref.prefName"
+        :stroke="colors[index % colors.length]"
+      />
     </LineChart>
+    <p v-else>データがありません。</p>
   </div>
 </template>
 
@@ -31,21 +38,36 @@ export default defineComponent({
   },
   props: {
     populationComposition: {
-      type: Array as PropType<PopulationComposition[]>,
-      required: true
-    },
-    selectedData: {
-      type: Number,
+      type: Array as PropType<{ prefName: string, data: PopulationComposition[] }[]>,
       required: true
     }
   },
   setup(props) {
-    const populationCompositionData = computed(() => {
-      return props.populationComposition.filter((item) => item.year === props.selectedData)
+    const colors = ['#8884d8', '#82ca9d', '#ffc658']
+
+    const chartData = computed(() => {
+      const allYears = new Set<number>()
+      props.populationComposition.forEach(pref => {
+        pref.data.forEach(d => {
+          allYears.add(d.year)
+        })
+      })
+
+      const yearsArray = Array.from(allYears).sort((a, b) => a - b)
+      const data = yearsArray.map(year => {
+        const yearData: any = { year }
+        props.populationComposition.forEach(pref => {
+          const yearValue = pref.data.find(d => d.year === year)?.value || 0
+          yearData[pref.prefName] = yearValue
+        })
+        return yearData
+      })
+      return data
     })
 
     return {
-      populationCompositionData
+      chartData,
+      colors
     }
   }
 })
