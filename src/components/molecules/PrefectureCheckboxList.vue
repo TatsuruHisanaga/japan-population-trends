@@ -1,15 +1,17 @@
 <!-- components/molecules/PrefectureCheckboxList.vue -->
 <template>
-  <div>
+  <div class="checkbox-list">
     <PopulationCompositionSelector @data-select="onDataSelect" />
-    <div v-for="prefecture in prefectures" :key="prefecture.prefCode">
-      <CheckboxItem
-        :value="prefecture.prefCode"
-        :checked="isChecked(prefecture.prefCode)"
-        @change="onCheckboxChange(prefecture.prefCode, $event)"
-      >
-        {{ prefecture.prefName }}
-      </CheckboxItem>
+    <div class="checkbox-container">
+      <div v-for="prefecture in prefectures" :key="prefecture.prefCode" class="checkbox-wrapper">
+        <CheckboxItem
+          :value="prefecture.prefCode"
+          :checked="isChecked(prefecture.prefCode)"
+          @change="onCheckboxChange(prefecture.prefCode, $event)"
+        >
+          {{ prefecture.prefName }}
+        </CheckboxItem>
+      </div>
     </div>
     <PopulationCompositionGraph
       v-for="prefCode in selectedPrefectures"
@@ -75,3 +77,15 @@ export default defineComponent({
   }
 })
 </script>
+
+<style scoped>
+.checkbox-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  grid-gap: 1px;
+}
+
+.checkbox-wrapper {
+  padding: 8px;
+}
+</style>
