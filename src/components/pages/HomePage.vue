@@ -3,24 +3,21 @@
     <h3>都道府県一覧</h3>
     <PrefectureCheckboxList :prefectures="prefecturesState" @change="onPrefectureChange" />
     <PopulationCompositionGraph
-      v-for="prefCode in selectedPrefectures"
-      :key="prefCode"
-      :population-composition="populationCompositionState[prefCode] || []"
-      :selected-data="selectedData"
+      :population-composition="filteredPopulationComposition"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
+import { defineComponent, onMounted, ref, computed } from 'vue'
 import PrefectureCheckboxList from '@/components/molecules/PrefectureCheckboxList.vue'
 import { prefecturesState, fetchPrefecturesData } from '@/utils/prefectures'
-import PopulationCompositionGraph from '../molecules/PopulationCompositionGraph.vue'
+import PopulationCompositionGraph from '@/components/molecules/PopulationCompositionGraph.vue'
 import {
   populationCompositionState,
   fetchPopulationCompositionData
 } from '@/utils/populationComposition'
-
+import type { Prefecture } from '@/types/prefecture'
 export default defineComponent({
   components: {
     PrefectureCheckboxList,
@@ -28,7 +25,7 @@ export default defineComponent({
   },
   setup() {
     const selectedPrefectures = ref<number[]>([])
-    const selectedData = ref<number>(0)
+
     onMounted(async () => {
       await fetchPrefecturesData()
     })
@@ -40,11 +37,19 @@ export default defineComponent({
       )
     }
 
+    const filteredPopulationComposition = computed(() => {
+      return selectedPrefectures.value.map(prefCode => {
+        const prefecture = prefecturesState.find((pref: Prefecture) => pref.prefCode === prefCode)
+        const prefName = prefecture ? prefecture.prefName : ''
+        const data = populationCompositionState[prefCode] || []
+        return { prefName, data }
+      })
+    })
+
     return {
       prefecturesState,
       selectedPrefectures,
-      populationCompositionState,
-      selectedData,
+      filteredPopulationComposition,
       onPrefectureChange
     }
   }
