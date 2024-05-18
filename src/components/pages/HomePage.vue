@@ -6,6 +6,7 @@
       v-for="prefCode in selectedPrefectures"
       :key="prefCode"
       :population-composition="populationCompositionState[prefCode] || []"
+      :selected-data="selectedData"
     />
   </div>
 </template>
@@ -27,7 +28,7 @@ export default defineComponent({
   },
   setup() {
     const selectedPrefectures = ref<number[]>([])
-
+    const selectedData = ref<number>(0)
     onMounted(async () => {
       await fetchPrefecturesData()
     })
@@ -43,6 +44,7 @@ export default defineComponent({
       prefecturesState,
       selectedPrefectures,
       populationCompositionState,
+      selectedData,
       onPrefectureChange
     }
   }

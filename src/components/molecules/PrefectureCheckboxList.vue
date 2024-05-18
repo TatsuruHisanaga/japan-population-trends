@@ -17,7 +17,7 @@
       v-for="prefCode in selectedPrefectures"
       :key="prefCode"
       :population-composition="populationCompositionState[prefCode] || []"
-      :selected-data="Number(selectedData)"
+      :selected-data="selectedData"
     />
   </div>
 </template>
@@ -47,7 +47,7 @@ export default defineComponent({
   },
   setup() {
     const selectedPrefectures = ref<number[]>([])
-    const selectedData = ref<string>('総人口')
+    const selectedData = ref<number>(0)
 
     const isChecked = (prefCode: number) => {
       return selectedPrefectures.value.includes(prefCode)
@@ -63,7 +63,7 @@ export default defineComponent({
     }
 
     const onDataSelect = (data: string) => {
-      selectedData.value = data
+      selectedData.value = Number(data)
     }
 
     return {
