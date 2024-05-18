@@ -13,12 +13,6 @@
         </CheckboxItem>
       </div>
     </div>
-    <PopulationCompositionGraph
-      v-for="prefCode in selectedPrefectures"
-      :key="prefCode"
-      :population-composition="populationCompositionState[prefCode] || []"
-      :selected-data="selectedData"
-    />
   </div>
 </template>
 
@@ -30,13 +24,11 @@ import {
   fetchPopulationCompositionData
 } from '@/utils/populationComposition'
 import PopulationCompositionSelector from '@/components/molecules/PopulationCompositionSelector.vue'
-import PopulationCompositionGraph from '@/components/molecules/PopulationCompositionGraph.vue'
 import CheckboxItem from '@/components/atoms/CheckboxItem.vue'
 
 export default defineComponent({
   components: {
     PopulationCompositionSelector,
-    PopulationCompositionGraph,
     CheckboxItem
   },
   props: {
@@ -84,6 +76,4 @@ export default defineComponent({
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   grid-gap: 1px;
 }
-
-
 </style>
