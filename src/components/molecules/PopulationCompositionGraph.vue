@@ -35,14 +35,13 @@ export default defineComponent({
       required: true
     },
     selectedData: {
-      type: String,
+      type: Number,
       required: true
     }
   },
   setup(props) {
     const populationCompositionData = computed(() => {
-      const data = props.populationComposition.find((item) => item.label === props.selectedData)
-      return data ? data.data : []
+      return props.populationComposition.filter((item) => item.year === props.selectedData)
     })
 
     return {
