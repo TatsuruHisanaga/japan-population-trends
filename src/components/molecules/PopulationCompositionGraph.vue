@@ -22,6 +22,7 @@
 import { defineComponent, type PropType, computed } from 'vue'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 import type { PopulationComposition } from '@/types/populationComposition'
+import PopulationCompositionSelector from '@/components/molecules/PopulationCompositionSelector.vue'
 
 export default defineComponent({
   name: 'PopulationCompositionGraph',
@@ -40,6 +41,10 @@ export default defineComponent({
     populationComposition: {
       type: Array as PropType<{ prefName: string, data: PopulationComposition[] }[]>,
       required: true
+    },
+    selectedData: {
+      type: String as PropType<string>,
+      required: true
     }
   },
   setup(props) {
@@ -48,7 +53,8 @@ export default defineComponent({
     const chartData = computed(() => {
       const allYears = new Set<number>()
       props.populationComposition.forEach(pref => {
-        pref.data.forEach(d => {
+        const filteredData = pref.data.find(d => d.label === props.selectedData)
+        filteredData?.data.forEach((d: { year: number; }) => {
           allYears.add(d.year)
         })
       })
@@ -57,7 +63,8 @@ export default defineComponent({
       const data = yearsArray.map(year => {
         const yearData: any = { year }
         props.populationComposition.forEach(pref => {
-          const yearValue = pref.data.find(d => d.year === year)?.value || 0
+          const filteredData = pref.data.find(d => d.label === props.selectedData)
+          const yearValue = filteredData?.data.find((d: { year: number; }) => d.year === year)?.value || 0
           yearData[pref.prefName] = yearValue
         })
         return yearData
@@ -72,3 +79,5 @@ export default defineComponent({
   }
 })
 </script>
+
+
