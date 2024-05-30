@@ -1,8 +1,12 @@
 export interface PopulationComposition {
-  year: number
-  value: number
+  label: string,
+  data:[
+    year: number,
+    value: number,
+    rate?: number
+  ]
+  
 }
-
 export interface PopulationCompositionData {
   [key: number]: PopulationComposition[];
 }
